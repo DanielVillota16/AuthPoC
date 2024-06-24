@@ -32,6 +32,15 @@ function App() {
     userManager.getUser().then(info => console.log(info));
   }
 
+  const fetchApi = async () => {
+    const headers = {
+      Authorization: `Bearer ${user.access_token}`
+    };
+    const response = await fetch("https://localhost:7050/WeatherForecast", { headers });
+    const json = await response.json();
+    console.log(json);
+  }
+
   return (
     <div>
       {
@@ -41,6 +50,7 @@ function App() {
             <>
               <p>Welcome, {user.profile.name}!</p>
               <button onClick={showUserInfo}>Show things</button>
+              <button onClick={fetchApi}>Fetch api</button>
               <button onClick={handleLogoutOIDC}>Log out</button>
             </>
           )
