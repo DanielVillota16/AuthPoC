@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthPoC.WebService", "AuthP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthPoC.IdentityServer", "AuthPoC.IdentityServer\AuthPoC.IdentityServer.csproj", "{B84E0878-E5B5-4BE0-985E-4D64CD6A7609}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthPoC.IdentityServer4", "AuthPoC.IdentityServer4\AuthPoC.IdentityServer4.csproj", "{34FF2F29-A8FC-47C6-A11A-58C8A7890E5E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{B84E0878-E5B5-4BE0-985E-4D64CD6A7609}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B84E0878-E5B5-4BE0-985E-4D64CD6A7609}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B84E0878-E5B5-4BE0-985E-4D64CD6A7609}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34FF2F29-A8FC-47C6-A11A-58C8A7890E5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34FF2F29-A8FC-47C6-A11A-58C8A7890E5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34FF2F29-A8FC-47C6-A11A-58C8A7890E5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34FF2F29-A8FC-47C6-A11A-58C8A7890E5E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

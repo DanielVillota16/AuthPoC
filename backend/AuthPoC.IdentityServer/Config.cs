@@ -15,9 +15,6 @@ public static class Config
     public static IEnumerable<ApiResource> ApiResources =>
         [
             new ("myApi", "My API")
-            {
-                Scopes = { "myApi.read", "myApi.write"}
-            }
         ];
 
     public static IEnumerable<ApiScope> ApiScopes =>
@@ -31,15 +28,16 @@ public static class Config
             new ()
             {
                 ClientId = "auth-poc",
-                AllowedGrantTypes = GrantTypes.Implicit,
-                ClientSecrets = { new Secret("secret".Sha256()) },
-                AllowedScopes = { "openid", "profile", "myApi.read", "myApi.write" },
-                RedirectUris = { "http://localhost:5050/" },
-                PostLogoutRedirectUris = { "http://localhost:5050/" },
-                AllowedCorsOrigins = { "http://localhost:5050", "http://127.0.0.1:5050" },
+                AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
+                // ClientSecrets = { new Secret("secret".Sha256()) },
+                AllowedScopes = { "openid", "profile", "myApi.write", "myApi.read" },
+                RedirectUris = { "http://localhost:5050/callback" },
+                PostLogoutRedirectUris = { "http://localhost:5050" },
+                AllowedCorsOrigins = { "http://localhost:5050" },
                 AllowAccessTokensViaBrowser = true,
                 RequirePkce = true,
                 AllowOfflineAccess = true,
+                RequireClientSecret = false,
             }
         ];
 

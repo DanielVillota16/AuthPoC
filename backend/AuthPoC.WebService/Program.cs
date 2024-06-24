@@ -12,8 +12,25 @@ builder.Services.AddAuthentication("Bearer")
     {
         options.Authority = "https://localhost:7021";
         options.RequireHttpsMetadata = false;
-        options.Audience = "myApi";
+        options.MetadataAddress = "https://localhost:7021/.well-known/openid-configuration";
+        options.TokenValidationParameters = new()
+        {
+            ValidateIssuer = true,
+            ValidateIssuerSigningKey = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.Zero,
+            ValidIssuer = "https://localhost:7021",
+        };
     });
+
+// builder.Services.AddAuthentication("Bearer")
+//     .AddIdentityServerAuthentication(options =>
+//     {
+//         options.Authority = "https://localhost:7021";
+//         options.RequireHttpsMetadata = false;
+//         options.ApiName = "myApi";
+//     });
 
 builder.Services.AddAuthorizationBuilder()
     .AddPolicy("AdminOnly", policy => policy.RequireRole("admin"));
@@ -22,7 +39,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin", policy =>
     {
-        policy.WithOrigins("http://localhost:5050", "http://127.0.0.1:5050")
+        policy.AllowAnyOrigin()
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
@@ -37,11 +54,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// app.UseHttpsRedirection();
-// app.UseIdentityServer();
-
+app.UseHttpsRedirection();
 app.UseCors("AllowSpecificOrigin");
-app.UseAuthorization();
 app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
 app.Run();

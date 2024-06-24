@@ -8,17 +8,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-// builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen();
 
-builder.Services.AddIdentityServer(options =>
+UserInteractionOptions UserInteraction = new()
 {
-    options.UserInteraction = new UserInteractionOptions()
-    {
-        LogoutUrl = "/account/logout",
-        LoginUrl = "/account/login",
-        LoginReturnUrlParameter = "returnUrl"
-    };
-})
+    LogoutUrl = "/account/logout",
+    LoginUrl = "/account/login",
+    LoginReturnUrlParameter = "returnUrl"
+};
+
+builder.Services.AddIdentityServer(options => { options.UserInteraction = UserInteraction; })
     .AddInMemoryClients(Config.Clients)
     .AddInMemoryIdentityResources(Config.IdentityResources)
     .AddInMemoryApiResources(Config.ApiResources)
@@ -26,26 +25,35 @@ builder.Services.AddIdentityServer(options =>
     .AddTestUsers(Config.Users)
     .AddDeveloperSigningCredential();
 
-builder.Services.AddAuthentication("Bearer")
-    .AddIdentityServerAuthentication(options =>
+// builder.Services.AddAuthentication("Bearer")
+//     .AddIdentityServerAuthentication(options =>
+//     {
+//         options.Authority = "https://localhost:7021";
+//         options.RequireHttpsMetadata = false;
+//         options.ApiName = "myApi";
+//     });
+
+builder.Services.AddAuthentication()
+    .AddJwtBearer(options =>
     {
         options.Authority = "https://localhost:7021";
         options.RequireHttpsMetadata = false;
-        options.ApiName = "myApi";
+        options.Audience = "myApi";
     });
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-// if (app.Environment.IsDevelopment())
-// {
-//     app.UseSwagger();
-//     app.UseSwaggerUI();
-// }
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 app.UseHttpsRedirection();
-app.UseRouting();
+// app.UseRouting();
 app.UseIdentityServer();
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
