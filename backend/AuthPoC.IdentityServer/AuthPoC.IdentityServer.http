@@ -1,6 +1,0 @@
-@AuthPoC.IdentityServer_HostAddress = http://localhost:5290
-
-GET {{AuthPoC.IdentityServer_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

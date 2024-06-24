@@ -1,17 +1,50 @@
-import { login } from './authService';
+import { useState, useEffect } from 'react';
+import { userManager } from './authService';
 import './App.css';
 
 function App() {
 
-  const handleLogin = () => {
-    login("user", "password")
-      .then(result => console.log(result))
-      .catch((error) => console.error(error));
-  };
+  // const handleLogin = () => {
+  //   login("user", "password")
+  //     .then(result => console.log(result))
+  //     .catch((error) => console.error(error));
+  // };
+
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    async function checkAuthStatus() {
+      const user = await userManager.getUser();
+      setUser(user);
+    }
+    checkAuthStatus();
+  }, []);
+
+  const handleLoginOIDC = () => {
+    userManager.signinRedirect().catch(err => console.error(err));
+  }
+
+  const handleLogoutOIDC = () => {
+    userManager.signoutRedirect().catch(err => console.error(err));
+  }
+
+  const showUserInfo = () => {
+    userManager.getUser().then(info => console.log(info));
+  }
 
   return (
     <div>
-      <button onClick={handleLogin}>Log in</button>
+      {
+        !user
+          ? <button onClick={handleLoginOIDC}>Log in</button>
+          : (
+            <>
+              <p>Welcome, {user.profile.name}!</p>
+              <button onClick={showUserInfo}>Show things</button>
+              <button onClick={handleLogoutOIDC}>Log out</button>
+            </>
+          )
+      }
     </div>
   );
 };

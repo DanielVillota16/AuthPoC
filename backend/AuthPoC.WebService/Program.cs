@@ -10,36 +10,29 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer("Bearer", options =>
     {
-        options.Authority = "https://localhost:7021";
-        options.RequireHttpsMetadata = false;
-        options.MetadataAddress = "https://localhost:7021/.well-known/openid-configuration";
+        options.Authority = "https://localhost:5001";
+        // options.RequireHttpsMetadata = false;
+        // options.MetadataAddress = "https://localhost:5001/.well-known/openid-configuration";
         options.TokenValidationParameters = new()
         {
-            ValidateIssuer = true,
-            ValidateIssuerSigningKey = false,
-            ValidateAudience = false,
-            ValidateLifetime = true,
-            ClockSkew = TimeSpan.Zero,
-            ValidIssuer = "https://localhost:7021",
+            ValidateAudience = false
         };
     });
 
-// builder.Services.AddAuthentication("Bearer")
-//     .AddIdentityServerAuthentication(options =>
-//     {
-//         options.Authority = "https://localhost:7021";
-//         options.RequireHttpsMetadata = false;
-//         options.ApiName = "myApi";
-//     });
-
 builder.Services.AddAuthorizationBuilder()
-    .AddPolicy("AdminOnly", policy => policy.RequireRole("admin"));
+    .AddPolicy("ApiScope", policy => {
+        policy.RequireAuthenticatedUser();
+        policy.RequireClaim("scope", "api1");
+    });
+
+// builder.Services.AddAuthorizationBuilder()
+//     .AddPolicy("AdminOnly", policy => policy.RequireRole("admin"));
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin", policy =>
     {
-        policy.AllowAnyOrigin()
+        policy.WithOrigins("http://localhost:5050")
             .AllowAnyHeader()
             .AllowAnyMethod();
     });

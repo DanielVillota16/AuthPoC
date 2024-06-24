@@ -1,59 +1,55 @@
-using AuthPoC.IdentityServer;
-using IdentityServer4.Configuration;
+﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-var builder = WebApplication.CreateBuilder(args);
+using Serilog;
+using Serilog.Events;
+using Serilog.Sinks.SystemConsole.Themes;
 
-// Add services to the container.
+namespace AuthPoC.IdentityServer;
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-UserInteractionOptions UserInteraction = new()
+public class Program
 {
-    LogoutUrl = "/account/logout",
-    LoginUrl = "/account/login",
-    LoginReturnUrlParameter = "returnUrl"
-};
-
-builder.Services.AddIdentityServer(options => { options.UserInteraction = UserInteraction; })
-    .AddInMemoryClients(Config.Clients)
-    .AddInMemoryIdentityResources(Config.IdentityResources)
-    .AddInMemoryApiResources(Config.ApiResources)
-    .AddInMemoryApiScopes(Config.ApiScopes)
-    .AddTestUsers(Config.Users)
-    .AddDeveloperSigningCredential();
-
-// builder.Services.AddAuthentication("Bearer")
-//     .AddIdentityServerAuthentication(options =>
-//     {
-//         options.Authority = "https://localhost:7021";
-//         options.RequireHttpsMetadata = false;
-//         options.ApiName = "myApi";
-//     });
-
-builder.Services.AddAuthentication()
-    .AddJwtBearer(options =>
+    public static int Main(string[] args)
     {
-        options.Authority = "https://localhost:7021";
-        options.RequireHttpsMetadata = false;
-        options.Audience = "myApi";
-    });
+        Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Debug()
+            .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+            .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information)
+            .MinimumLevel.Override("System", LogEventLevel.Warning)
+            .MinimumLevel.Override("Microsoft.AspNetCore.Authentication", LogEventLevel.Information)
+            .Enrich.FromLogContext()
+            // uncomment to write to Azure diagnostics stream
+            //.WriteTo.File(
+            //    @"D:\home\LogFiles\Application\identityserver.txt",
+            //    fileSizeLimitBytes: 1_000_000,
+            //    rollOnFileSizeLimit: true,
+            //    shared: true,
+            //    flushToDiskInterval: TimeSpan.FromSeconds(1))
+            .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}", theme: AnsiConsoleTheme.Code)
+            .CreateLogger();
 
-var app = builder.Build();
+        try
+        {
+            Log.Information("Starting host...");
+            CreateHostBuilder(args).Build().Run();
+            return 0;
+        }
+        catch (Exception ex)
+        {
+            Log.Fatal(ex, "Host terminated unexpectedly.");
+            return 1;
+        }
+        finally
+        {
+            Log.CloseAndFlush();
+        }
+    }
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    public static IHostBuilder CreateHostBuilder(string[] args) =>
+        Host.CreateDefaultBuilder(args)
+            .UseSerilog()
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<Startup>();
+            });
 }
-
-app.UseHttpsRedirection();
-// app.UseRouting();
-app.UseIdentityServer();
-app.UseAuthentication();
-app.UseAuthorization();
-app.MapControllers();
-app.Run();

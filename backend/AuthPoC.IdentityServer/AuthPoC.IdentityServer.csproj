@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -7,9 +7,24 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="IdentityServer4" Version="4.1.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.4" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+    <PackageReference Include="IdentityServer4" />
+    <PackageReference Include="Serilog.AspNetCore" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="3.1.5" />
+    <PackageReference Update="IdentityModel" Version="4.3.0" />
+
+    <PackageReference Update="IdentityServer4" Version="4.0.0" />
+    <PackageReference Update="IdentityServer4.EntityFramework" Version="4.0.0" />
+    <PackageReference Update="IdentityServer4.AspNetIdentity" Version="4.0.0" />
+
+    <PackageReference Update="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="$(AspNetVersion)" />
+    <PackageReference Update="Microsoft.AspNetCore.Authentication.JwtBearer" Version="$(AspNetVersion)" />
+    <PackageReference Update="Microsoft.AspNetCore.Authentication.Google" Version="$(AspNetVersion)" />
+    <PackageReference Update="Microsoft.EntityFrameworkCore.SqlServer" Version="$(AspNetVersion)" />
+    <PackageReference Update="Microsoft.EntityFrameworkCore.Design" Version="$(AspNetVersion)" />
+
+    <PackageReference Update="System.IdentityModel.Tokens.Jwt" Version="5.6.0" />
+
+    <PackageReference Update="Serilog.AspNetCore" Version="3.2.0" />
   </ItemGroup>
 
 </Project>
