@@ -19,14 +19,14 @@ builder.Services.AddAuthentication("Bearer")
         };
     });
 
-builder.Services.AddAuthorizationBuilder()
-    .AddPolicy("ApiScope", policy => {
-        policy.RequireAuthenticatedUser();
-        policy.RequireClaim("scope", "api1");
-    });
-
 // builder.Services.AddAuthorizationBuilder()
-//     .AddPolicy("AdminOnly", policy => policy.RequireRole("admin"));
+//     .AddPolicy("ApiScope", policy => {
+//         policy.RequireAuthenticatedUser();
+//         policy.RequireClaim("scope", "api1");
+//     });
+
+builder.Services.AddAuthorizationBuilder()
+    .AddPolicy("AdminOnly", policy => policy.RequireRole("admin"));
 
 builder.Services.AddCors(options =>
 {
