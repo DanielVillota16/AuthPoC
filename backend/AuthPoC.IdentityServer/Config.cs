@@ -14,47 +14,13 @@ public static class Config
             new IdentityResources.Profile(),
         ];
 
-
     public static IEnumerable<ApiScope> ApiScopes =>
         [
-            new("api1", "My API")
+            new("api1", "My API", ["role"])
         ];
 
     public static IEnumerable<Client> Clients =>
         [
-            // machine to machine client
-            new()
-            {
-                ClientId = "client",
-                ClientSecrets = { new Secret("secret".Sha256()) },
-
-                AllowedGrantTypes = GrantTypes.ClientCredentials,
-                // scopes that client has access to
-                AllowedScopes = { "api1" }
-            },
-
-            // interactive ASP.NET Core MVC client
-            new()
-            {
-                ClientId = "mvc",
-                ClientSecrets = { new Secret("secret".Sha256()) },
-
-                AllowedGrantTypes = GrantTypes.Code,
-
-                // where to redirect to after login
-                RedirectUris = { "https://localhost:5002/signin-oidc" },
-
-                // where to redirect to after logout
-                PostLogoutRedirectUris = { "https://localhost:5002/signout-callback-oidc" },
-
-                AllowedScopes =
-                [
-                    IdentityServerConstants.StandardScopes.OpenId,
-                    IdentityServerConstants.StandardScopes.Profile,
-                    "api1"
-                ]
-            },
-
             // JavaScript Client
             new()
             {
