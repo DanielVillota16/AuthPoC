@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuthPoC.WebService.Controllers;
@@ -23,7 +22,7 @@ public class WeatherForecastController(ILogger<WeatherForecastController> logger
 
     private readonly ILogger<WeatherForecastController> _logger = logger;
 
-    [Authorize(Roles = "admin")]
+    [Permission(screenName: "auth-poc.weather-forecast", resource: "action-get", Roles = "admin")]
     [HttpGet(Name = "GetWeatherForecast")]
     public IEnumerable<WeatherForecast> Get()
     {

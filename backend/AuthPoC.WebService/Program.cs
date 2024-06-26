@@ -27,6 +27,8 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.AddAuth();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

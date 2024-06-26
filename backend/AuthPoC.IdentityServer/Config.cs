@@ -16,7 +16,7 @@ public static class Config
 
     public static IEnumerable<ApiScope> ApiScopes =>
         [
-            new("api1", "My API", ["role"])
+            new("api1", "My API", ["role", "auth-poc.weather-forecast"])
         ];
 
     public static IEnumerable<Client> Clients =>
